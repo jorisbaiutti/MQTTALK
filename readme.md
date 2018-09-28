@@ -7,9 +7,8 @@
 
 ## Run the app
 1. Checkout repository
-2. Run `dotnet restore` in root directory
-3. To start the app, run `dotnet run --project .\MQTTalk.App\`
-4. For unit tests, run `dotnet test .\MQTTalk.Test\`
+2. To start the app, run `dotnet run --project .\MQTTalk.App\`
+3. For unit tests, run `dotnet test .\MQTTalk.Test\`
 
 
 ## Docker
