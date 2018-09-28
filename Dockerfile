@@ -18,6 +18,11 @@ WORKDIR "/src/MQTTalk.App"
 RUN dotnet build "MQTTalk.App.csproj" -c Release -o /app
 
 FROM build AS publish
+# Rebuild sass for linux bindings
+WORKDIR "/src/MQTTalk.App/ClientApp"
+RUN npm rebuild node-sass --force
+# End rebuild
+WORKDIR "/src/MQTTalk.App"
 RUN dotnet publish "MQTTalk.App.csproj" -c Release -o /app
 
 FROM base AS final
