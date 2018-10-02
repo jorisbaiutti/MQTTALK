@@ -36,42 +36,46 @@ export class WebrtcComponent implements OnInit {
   }
 
   private call(): void {
-    this.peerConnection1 = new RTCPeerConnection({});
+    this.peerConnection1 = new RTCPeerConnection({
+
+    });
     this.peerConnection1.onicecandidate = e => this.onIceCandidate(this.peerConnection1, e);
 
     this.peerConnection2 = new RTCPeerConnection({});
     this.peerConnection2.onicecandidate = e => this.onIceCandidate(this.peerConnection2, e);
-    this.peerConnection1.onaddstream = e => this.gotRemoteStream(e);
+    this.peerConnection2.onaddstream = (ev) => {
+      const remoteVideo = (document.getElementById('remoteVideo') as HTMLMediaElement);
+      if (remoteVideo.srcObject !== ev.stream) {
+        remoteVideo.srcObject = ev.stream;
+      }
+    };
 
     this.peerConnection1.addStream(this.localStream);
 
+    const me = this;
     this.peerConnection1.createOffer({
       offerToReceiveAudio: 1,
       offerToReceiveVideo: 1
     }).then((desc) => {
-      console.log(this);
-      this.peerConnection1.setLocalDescription(desc);
-      this.peerConnection2.setRemoteDescription(desc);
-      this.peerConnection2.createAnswer().then((d) => {
-        console.log(this);
-        this.peerConnection2.setLocalDescription(d);
-        this.peerConnection1.setRemoteDescription(d);
+      me.peerConnection1.setLocalDescription(desc);
+      me.peerConnection2.setRemoteDescription(desc);
+      me.peerConnection2.createAnswer({
+        offerToReceiveAudio: 1,
+        offerToReceiveVideo: 1
+      }).then((d) => {
+        me.peerConnection2.setLocalDescription(d);
+        me.peerConnection1.setRemoteDescription(d);
       });
     });
 
     this.called = true;
   }
 
-  private gotRemoteStream(ev): void {
-    const remoteVideo = document.getElementById('remoteVideo') as HTMLMediaElement;
-    if (remoteVideo.srcObject !== ev.streams[0]) {
-      remoteVideo.srcObject = ev.streams[0];
-    }
-  }
-
   private onIceCandidate(peerConnection: RTCPeerConnection, ev: RTCPeerConnectionIceEvent): void {
-    const otherPc = peerConnection === this.peerConnection1 ? this.peerConnection1 : this.peerConnection2;
-    otherPc.addIceCandidate(ev.candidate);
+    if (ev.candidate) {
+      const otherPc = peerConnection === this.peerConnection1 ? this.peerConnection1 : this.peerConnection2;
+      otherPc.addIceCandidate(ev.candidate);
+    }
   }
 
   private hangUp(): void {
