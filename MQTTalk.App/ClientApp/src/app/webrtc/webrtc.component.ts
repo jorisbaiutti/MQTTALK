@@ -10,7 +10,8 @@ export class WebrtcComponent implements OnInit {
   public started = false;
   public called = false;
 
-  private localStream: MediaStream;
+  public localStream: MediaStream;
+  public localStreamUrl: string;
   private remoteStream: MediaStream;
 
   private peerConnection1: RTCPeerConnection;
@@ -39,18 +40,27 @@ export class WebrtcComponent implements OnInit {
     this.peerConnection1 = new RTCPeerConnection({
 
     });
-    this.peerConnection1.onicecandidate = e => this.onIceCandidate(this.peerConnection1, e);
+    this.peerConnection1.ontrack = () => {
+
+    };
+    this.peerConnection1.onicecandidate = e => {
+      this.peerConnection2.addIceCandidate(e.candidate);
+    };
 
     this.peerConnection2 = new RTCPeerConnection({});
-    this.peerConnection2.onicecandidate = e => this.onIceCandidate(this.peerConnection2, e);
-    this.peerConnection2.onaddstream = (ev) => {
+    this.peerConnection2.onicecandidate = e => {
+      this.peerConnection1.addIceCandidate(e.candidate);
+    };
+    const self = this;
+    this.peerConnection2.ontrack = e => {
       const remoteVideo = (document.getElementById('remoteVideo') as HTMLMediaElement);
-      if (remoteVideo.srcObject !== ev.stream) {
-        remoteVideo.srcObject = ev.stream;
+      if (remoteVideo.srcObject !== e.streams[0]) {
+        self.remoteStream = e.streams[0];
+        remoteVideo.srcObject = e.streams[0];
       }
     };
 
-    this.peerConnection1.addStream(this.localStream);
+    this.localStream.getTracks().forEach(track => this.peerConnection1.addTrack(track, this.localStream));
 
     const me = this;
     this.peerConnection1.createOffer({
@@ -69,13 +79,6 @@ export class WebrtcComponent implements OnInit {
     });
 
     this.called = true;
-  }
-
-  private onIceCandidate(peerConnection: RTCPeerConnection, ev: RTCPeerConnectionIceEvent): void {
-    if (ev.candidate) {
-      const otherPc = peerConnection === this.peerConnection1 ? this.peerConnection1 : this.peerConnection2;
-      otherPc.addIceCandidate(ev.candidate);
-    }
   }
 
   private hangUp(): void {
