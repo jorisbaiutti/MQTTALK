@@ -17,12 +17,12 @@ export class WebrtcComponent implements OnInit {
   private peerConnection1: RTCPeerConnection;
   private peerConnection2: RTCPeerConnection;
 
-  constructor() {  }
+  constructor() { }
 
   ngOnInit() {
   }
 
-  private start(): void {
+  public start(): void {
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -36,7 +36,7 @@ export class WebrtcComponent implements OnInit {
       .catch(e => alert(`getUserMedia() error: ${e.name}`));
   }
 
-  private call(): void {
+  public call(): void {
     this.peerConnection1 = new RTCPeerConnection({
 
     });
@@ -81,7 +81,7 @@ export class WebrtcComponent implements OnInit {
     this.called = true;
   }
 
-  private hangUp(): void {
+  public hangUp(): void {
     console.log('Ending call');
     this.peerConnection1.close();
     this.peerConnection2.close();
