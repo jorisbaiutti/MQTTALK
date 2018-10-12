@@ -6,11 +6,13 @@
     "module": "commonjs",
     "types": [
       "jasmine",
-      "node"
+      "node",
+      "webrtc"
     ]
   },
   "files": [
-    "test.ts"
+    "test.ts",
+    "polyfills.ts"
   ],
   "include": [
     "**/*.spec.ts",

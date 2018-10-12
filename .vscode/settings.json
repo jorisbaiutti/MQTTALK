@@ -1,0 +1,3 @@
+{
+    "typescript.tsdk": "./MQTTalk.App/ClientApp/node_modules/typescript/lib"
+}
