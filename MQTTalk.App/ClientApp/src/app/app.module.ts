@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { WebrtcComponent } from './webrtc/webrtc.component';
+import { SignalingComponent } from './signaling/signaling.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { WebrtcComponent } from './webrtc/webrtc.component';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    WebrtcComponent
+    WebrtcComponent,
+    SignalingComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -28,7 +30,8 @@ import { WebrtcComponent } from './webrtc/webrtc.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      {path: 'webrtc', component: WebrtcComponent}
+      { path: 'webrtc', component: WebrtcComponent },
+      { path: 'signaling', component: SignalingComponent }
     ])
   ],
   providers: [],

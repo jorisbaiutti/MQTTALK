@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MQTTalk.App.Signaling;
 
 namespace MQTTalk.App
 {
@@ -27,6 +28,14 @@ namespace MQTTalk.App
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddSignalR();
+
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+            builder =>
+            {
+                builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200").AllowCredentials();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +54,12 @@ namespace MQTTalk.App
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseCors("CorsPolicy");
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<WebRtcHub>("/webRtcHub");
+            });
 
             app.UseMvc(routes =>
             {
