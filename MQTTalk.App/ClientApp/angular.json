@@ -24,7 +24,9 @@
               "src/styles.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/@aspnet/signalr/dist/browser/signalr.js"
+            ]
           },
           "configurations": {
             "production": {
