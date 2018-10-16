@@ -7,18 +7,40 @@ import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
 export class SignalingService {
 
   private connection: HubConnection;
+  public onReceiveOffer: EventEmitter<RTCSessionDescriptionInit> = new EventEmitter<RTCSessionDescriptionInit>();
+  public onReceiveAnswer: EventEmitter<RTCSessionDescriptionInit> = new EventEmitter<RTCSessionDescriptionInit>();
+  public onReceiveCandidate: EventEmitter<RTCIceCandidate> = new EventEmitter<RTCIceCandidate>();
 
   constructor() {
     this.connection = new HubConnectionBuilder().withUrl('https://localhost:5001/webRtcHub').configureLogging(LogLevel.Information).build();
     this.connection.start().catch(this.handleError);
 
-    this.connection.on('ReceiveOffer', (user: string, offer: string) => {
-      console.log('Offer received from: ' + user, offer);
+    this.connection.on('ReceiveOffer', (offer: string) => {
+      console.log('Offer received', offer);
+      this.onReceiveOffer.emit(JSON.parse(offer));
+    });
+
+    this.connection.on('ReceiveAnswer', (offer: string) => {
+      console.log('Answer received', offer);
+      this.onReceiveAnswer.emit(JSON.parse(offer));
+    });
+
+    this.connection.on('ReceiveIceCandidate', (candidate: string) => {
+      console.log('Candidate received', candidate);
+      this.onReceiveCandidate.emit(JSON.parse(candidate));
     });
   }
 
-  public sendOffer(user: string, offer: string) {
-    this.connection.send('SendOffer', user, offer).catch(this.handleError);
+  public sendOffer(offer: RTCSessionDescriptionInit) {
+    this.connection.send('SendOffer', JSON.stringify(offer)).catch(this.handleError);
+  }
+
+  public sendAnswer(answer: RTCSessionDescriptionInit) {
+    this.connection.send('SendAnswer', JSON.stringify(answer)).catch(this.handleError);
+  }
+
+  public sendCandidate(candidate: RTCIceCandidate) {
+    this.connection.send('SendIceCandidate', JSON.stringify(candidate)).catch(this.handleError);
   }
 
   private handleError(error: any) {

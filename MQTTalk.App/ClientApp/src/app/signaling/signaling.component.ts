@@ -16,6 +16,6 @@ export class SignalingComponent {
   }
 
   public sendOffer(): void {
-    this.signalHub.sendOffer("fooBar", this.message);
+    // this.signalHub.sendOffer(this.message);
   }
 }

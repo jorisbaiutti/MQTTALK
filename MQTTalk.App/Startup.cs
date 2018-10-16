@@ -34,7 +34,7 @@ namespace MQTTalk.App
             services.AddCors(options => options.AddPolicy("CorsPolicy",
             builder =>
             {
-                builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200").AllowCredentials();
+                builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200", "https://localhost:4200").AllowCredentials();
             }));
         }
 
