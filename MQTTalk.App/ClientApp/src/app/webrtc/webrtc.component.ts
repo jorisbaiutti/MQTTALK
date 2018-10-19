@@ -34,8 +34,14 @@ export class WebrtcComponent implements OnInit {
         video: true
       })
       .then((stream) => {
+        console.log('Media Stream open');
         this.localStream = stream;
-        (document.getElementById('localVideo') as HTMLMediaElement).srcObject = this.localStream;
+        const myVideo = document.getElementById('localVideo') as HTMLMediaElement;
+        myVideo.srcObject = this.localStream;
+        myVideo.muted = true;
+        console.log('Video source set and vide is muted');
+
+        console.log('Start accepting calls');
         this.wrService.acceptCalls(stream);
         this.wrService.onReceiveRemoteStream.subscribe(s => {
           const remoteVideo = (document.getElementById('remoteVideo') as HTMLMediaElement);

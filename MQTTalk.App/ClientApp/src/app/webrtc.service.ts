@@ -14,12 +14,18 @@ export class WebrtcService {
 
   public onReceiveRemoteStream: EventEmitter<MediaStream> = new EventEmitter();
 
+  private config: RTCConfiguration = {
+    iceServers: [{
+      urls: ['stun:stunturn.mobilegees.com', 'turn:stunturn.mobilegees.com']
+    }]
+  };
+
   constructor(signaling: SignalingService) {
     this.signal = signaling;
   }
 
   public acceptCalls(stream: MediaStream) {
-    this.connection = new RTCPeerConnection({});
+    this.connection = new RTCPeerConnection(this.config);
     this.connection.onicecandidate = e => {
       if (e.candidate) {
         this.signal.sendCandidate(e.candidate);
