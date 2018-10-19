@@ -43,8 +43,8 @@ export class WebrtcService {
     this.signal.onReceiveOffer.subscribe(offer => {
       this.connection.setRemoteDescription(offer);
       this.connection.createAnswer({
-        offerToReceiveAudio: 1,
-        offerToReceiveVideo: 1
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: true
       }).then((d) => {
         this.connection.setLocalDescription(d);
         this.signal.sendAnswer(d);
@@ -66,8 +66,8 @@ export class WebrtcService {
     }
 
     this.connection.createOffer({
-      offerToReceiveAudio: 1,
-      offerToReceiveVideo: 1
+      offerToReceiveAudio: true,
+      offerToReceiveVideo: true
     }).then((offer) => {
       return this.connection.setLocalDescription(offer);
     }).then(() => {

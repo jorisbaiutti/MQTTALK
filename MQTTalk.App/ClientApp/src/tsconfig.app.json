@@ -6,8 +6,7 @@
     "module": "es2015",
     "types": [
       "jasmine",
-      "node",
-      "webrtc"
+      "node"
     ]
   },
   "exclude": [
