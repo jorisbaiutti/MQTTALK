@@ -30,7 +30,6 @@ export class WebrtcComponent implements OnInit {
   public start(): void {
     navigator.mediaDevices
       .getUserMedia({
-        audio: true,
         video: true
       })
       .then((stream) => {
