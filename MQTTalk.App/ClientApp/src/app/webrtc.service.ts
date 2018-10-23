@@ -16,7 +16,9 @@ export class WebrtcService {
 
   private config: RTCConfiguration = {
     iceServers: [{
-      urls: ['stun:stunturn.mobilegees.com', 'turn:stunturn.mobilegees.com']
+      urls: ['stun:stunturn.mobilegees.com', 'turn:stunturn.mobilegees.com'],
+      username: 'mqttalk',
+      credential: 'mqttalk'
     }]
   };
 
