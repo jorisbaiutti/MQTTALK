@@ -50,7 +50,7 @@ export class WebrtcComponent implements OnInit {
         });
         this.started = true;
       })
-      .catch(e => alert(`getUserMedia() error: ${e.name}`));
+      .catch(e => console.log(`getUserMedia() error:`, e));
   }
 
   public call(): void {
