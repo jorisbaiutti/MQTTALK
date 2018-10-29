@@ -1,0 +1,16 @@
+POST http://localhost:53456/Account/Register HTTP/1.1
+Content-Type: application/json
+
+{
+	"Email": "joris.baiutti@gmail.com",
+	"Password": "SomeSecurePassword123!"
+}
+
+###
+POST http://localhost:53456/Account/login HTTP/1.1
+Content-Type: application/json
+
+{
+	"Email": "joris.baiutti@gmail.com",
+	"Password": "SomeSecurePassword123!"
+}
