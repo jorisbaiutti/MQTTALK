@@ -48,8 +48,8 @@ namespace MQTTalk.App
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
 
-            // ===== Add Jwt Authentication ========
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            //JWT Authentication
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); 
             services
                 .AddAuthentication(options =>
                 {
@@ -67,7 +67,7 @@ namespace MQTTalk.App
                         ValidIssuer = Configuration["https://mqttalk.mobilegees.com"],
                         ValidAudience = Configuration["https://mqttalk.mobilegees.com"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fc1d4f60-f18b-4bfc-829b-103e7d2f692c")),
-                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                        ClockSkew = TimeSpan.Zero 
                     };
                 });
 
