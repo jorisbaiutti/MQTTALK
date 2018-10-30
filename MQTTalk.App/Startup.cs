@@ -69,8 +69,12 @@ public class Startup
                 cfg.SaveToken = true;
                 cfg.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = Configuration["https://mqttalk.mobilegees.com"],
-                    ValidAudience = Configuration["https://mqttalk.mobilegees.com"],
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["http://localhost"],
+                    ValidAudience = Configuration["http://localhost:53457/"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fc1d4f60-f18b-4bfc-829b-103e7d2f692c")),
                     ClockSkew = TimeSpan.Zero
                 };
@@ -120,10 +124,10 @@ public class Startup
 
         app.UseSpa(spa =>
         {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
+            // To learn more about options for serving an Angular SPA from ASP.NET Core,
+            // see https://go.microsoft.com/fwlink/?linkid=864501
 
-                spa.Options.SourcePath = "ClientApp";
+            spa.Options.SourcePath = "ClientApp";
 
             if (env.IsDevelopment())
             {

@@ -77,12 +77,12 @@ namespace MQTTalk.App.Controllers
 
             var token = new JwtSecurityToken(
                 _jwtConfiguration.GetConfiguration("ValidIssuer"),
-                _jwtConfiguration.GetConfiguration("ValidIssuer"),
+                "http://localhost:53457/",
                 claims,
                 expires: expires,
                 signingCredentials: creds
             );
-
+            
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

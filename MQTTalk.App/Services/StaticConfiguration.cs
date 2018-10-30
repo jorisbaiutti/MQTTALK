@@ -9,7 +9,7 @@ namespace MQTTalk.App.Services
         public StaticJWTConfiguration()
         {
             _configDictionary = new Dictionary<string, string>();
-            _configDictionary.Add("ValidIssuer", "https://mqttalk.mobilgees.com");
+            _configDictionary.Add("ValidIssuer", "http://localhost");
             _configDictionary.Add("SecretKey", "fc1d4f60-f18b-4bfc-829b-103e7d2f692c");
             _configDictionary.Add("TokenLifeTime", "30");
         }

@@ -7,10 +7,15 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:53456/Account/login HTTP/1.1
+POST http://localhost:53457/Account/login HTTP/1.1
 Content-Type: application/json
 
 {
 	"Email": "joris.baiutti@gmail.com",
 	"Password": "SomeSecurePassword123!"
 }
+
+###
+Get http://localhost:53457/Test/someData
+Content-Type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb3Jpcy5iYWl1dHRpQGdtYWlsLmNvbSIsImp0aSI6Ijg3OWEzMTcwLWQ1M2UtNGM3OC04YTlmLTg5MzY1MTBkNmVlZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiYjViNDg3ZTAtYzY2Ny00MzEyLWJjNDQtMzk3OWIzZTQ1MmE3IiwiZXhwIjoxNTQzNDkwNDEzLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdCJ9.8Pj-s4U-6lhEKLLuARuuBddGVdEkRxpASPnd43sCjDI
