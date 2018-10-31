@@ -29,6 +29,8 @@ public class Startup
 
     public IConfiguration Configuration { get; }
 
+    private readonly IJWTConfiguration _jwtConfiguration;
+
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
@@ -73,8 +75,8 @@ public class Startup
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["http://localhost"],
-                    ValidAudience = Configuration["http://localhost:53457/"],
+                    ValidIssuer = "http://localhost/",
+                    ValidAudience = "http://localhost/",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fc1d4f60-f18b-4bfc-829b-103e7d2f692c")),
                     ClockSkew = TimeSpan.Zero
                 };

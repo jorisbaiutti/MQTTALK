@@ -15,7 +15,5 @@ namespace MQTTalk.App.Data
         {
 
         }
-
-
     }
 }

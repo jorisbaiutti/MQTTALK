@@ -11,6 +11,7 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { WebrtcComponent } from './webrtc/webrtc.component';
 import { SignalingComponent } from './signaling/signaling.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { SignalingComponent } from './signaling/signaling.component';
     CounterComponent,
     FetchDataComponent,
     WebrtcComponent,
-    SignalingComponent
+    SignalingComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
