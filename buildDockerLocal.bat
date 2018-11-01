@@ -1,4 +1,4 @@
 cd MQTTalk.App
 dotnet publish -o publish
 cd ..
-docker build --rm -f "Dockerfile.dev" -t mqttalk/dev:latest .
+docker build --rm -f "Dockerfile" -t mqttalk/dev:latest .

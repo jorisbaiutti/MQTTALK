@@ -47,6 +47,11 @@ namespace MQTTalk.App
             }
             else
             {
+                // Add environment variables
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(env.ContentRootPath)
+                    .AddEnvironmentVariables(prefix: "MQTTALK_");
+
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }

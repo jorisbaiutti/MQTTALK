@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mqttalk:
+    image: mqttalk/dev:latest
+    environment:
+     - MQTTALK_Client:IceStunUrl=stun:stunturn.mobilegees.com
+     - MQTTALK_Client:IceTurnUrl=turn:stunturn.mobilegees.com
+     - MQTTALK_Client:IceUsername=mqttalk
+     - MQTTALK_Client:IceCredential=mqttalk
+    ports:
+     - "9090:80"
+     

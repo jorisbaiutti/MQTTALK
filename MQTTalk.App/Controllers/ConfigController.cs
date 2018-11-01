@@ -19,7 +19,7 @@ namespace MQTTalk.App.Controllers
         public ActionResult<MqttalkClientConfig> Get()
         {
             var mConf = new MqttalkClientConfig();
-            _config.GetSection("Mqttalk:Client").Bind(mConf);
+            _config.GetSection("Client").Bind(mConf);
             return mConf;
         }
     }

@@ -1,6 +1,6 @@
 export interface Config {
-    IceStunUrl: string;
-    IceTurnUrl: string;
-    IceCredential: string;
-    IceUsername: string;
+    iceStunUrl: string;
+    iceTurnUrl: string;
+    iceCredential: string;
+    iceUsername: string;
 }

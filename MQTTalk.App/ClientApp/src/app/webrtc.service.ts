@@ -17,21 +17,14 @@ export class WebrtcService {
   }
 
   private getRtcConfig(): RTCConfiguration {
-    // todo -> Fix it, doesnt work. RtcConfiguration is always empty.....
     const targetConfig = this.config.getConfig();
-    const result = {
+    return {
       iceServers: [{
-        urls: [],
-        username: '',
-        credential: ''
+        urls: [targetConfig.iceStunUrl, targetConfig.iceTurnUrl],
+        username: targetConfig.iceUsername,
+        credential: targetConfig.iceCredential
       }]
     };
-    result.iceServers[0].urls.push(targetConfig.IceStunUrl);
-    result.iceServers[0].urls.push(targetConfig.IceTurnUrl);
-    result.iceServers[0].username = targetConfig.IceUsername;
-    result.iceServers[0].credential = targetConfig.IceCredential;
-    console.log(result);
-    return result;
   }
 
   public acceptCalls(stream: MediaStream) {

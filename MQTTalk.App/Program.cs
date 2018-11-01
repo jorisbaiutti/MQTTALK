@@ -19,10 +19,6 @@ namespace MQTTalk.App
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((hostingCtx, config) =>
-                {
-                    config.AddEnvironmentVariables("MQTTALK_");
-                })
                 .UseStartup<Startup>();
     }
 }
