@@ -44,10 +44,13 @@ namespace MQTTalk.App
 
             services.AddSignalR();
 
-
             services.AddDbContext<UserDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetValue<string>("Server:Database:Identity"));
+            });
+
+            services.AddDbContext<ChatDbContext>(options => {
+                options.UseSqlServer(Configuration.GetValue<string>("Server:Database:Chat"));
             });
 
             services.AddIdentity<IdentityUser, IdentityRole>()
@@ -91,7 +94,7 @@ namespace MQTTalk.App
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserDbContext userDbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserDbContext userDbContext, ChatDbContext chatDbContext)
         {
             if (env.IsDevelopment())
             {
@@ -137,6 +140,7 @@ namespace MQTTalk.App
             });
 
             userDbContext.Database.EnsureCreated();
+            chatDbContext.Database.EnsureCreated();
         }
     }
 }

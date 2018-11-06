@@ -10,7 +10,7 @@ namespace MQTTalk.App.Data
 {
     public class UserDbContext : IdentityDbContext 
     {
-        public UserDbContext(DbContextOptions options)
+        public UserDbContext(DbContextOptions<UserDbContext> options)
             : base(options)
         {
 
