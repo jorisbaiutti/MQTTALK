@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MQTTalk.App.Data;
-using MQTTalk.App.Services;
 using MQTTalk.App.Signaling;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -29,117 +28,116 @@ namespace MQTTalk.App
             Configuration = config;
         }
 
-    public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
-    private readonly IJWTConfiguration _jwtConfiguration;
 
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-        // In production, the Angular files will be served from this directory
-        services.AddSpaStaticFiles(configuration =>
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
         {
-            configuration.RootPath = "ClientApp/dist";
-        });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-        services.AddSignalR();
-
-        services.AddSingleton<IJWTConfiguration, StaticJWTConfiguration>();
-
-        services.AddDbContext<UserDbContext>(options =>
-        {
-            options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=UserDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-        });
-
-        services.AddIdentity<IdentityUser, IdentityRole>()
-            .AddEntityFrameworkStores<UserDbContext>()
-            .AddDefaultTokenProviders();
-
-        //JWT Authentication
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-        services
-            .AddAuthentication(options =>
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                configuration.RootPath = "ClientApp/dist";
+            });
 
-            })
-            .AddJwtBearer(cfg =>
+            services.AddSignalR();
+
+
+            services.AddDbContext<UserDbContext>(options =>
             {
-                cfg.RequireHttpsMetadata = false;
-                cfg.SaveToken = true;
-                cfg.TokenValidationParameters = new TokenValidationParameters
+                options.UseSqlServer(Configuration.GetValue<string>("Server:Database:Identity"));
+            });
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<UserDbContext>()
+                .AddDefaultTokenProviders();
+
+            //JWT Authentication
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services
+                .AddAuthentication(options =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = "http://localhost/",
-                    ValidAudience = "http://localhost/",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fc1d4f60-f18b-4bfc-829b-103e7d2f692c")),
-                    ClockSkew = TimeSpan.Zero
-                };
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration.GetValue<string>("Server:Jwt:Issuer"),
+                        ValidAudience = Configuration.GetValue<string>("Server:Jwt:Issuer"),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Server:Jwt:Secret"))),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+
+
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+            builder =>
+            {
+                builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200", "https://localhost:4200", "https://mqttalk.mobilegees.com").AllowCredentials();
+            }));
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserDbContext userDbContext)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
+            app.UseCors("CorsPolicy");
+            app.UseAuthentication();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<WebRtcHub>("/hub/webRtcHub");
             });
 
 
-
-        services.AddCors(options => options.AddPolicy("CorsPolicy",
-        builder =>
-        {
-            builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200", "https://localhost:4200", "https://mqttalk.mobilegees.com").AllowCredentials();
-        }));
-    }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserDbContext userDbContext)
-    {
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-        else
-        {
-            app.UseExceptionHandler("/Error");
-            app.UseHsts();
-        }
-
-        app.UseHttpsRedirection();
-        app.UseStaticFiles();
-        app.UseSpaStaticFiles();
-
-        app.UseCors("CorsPolicy");
-        app.UseAuthentication();
-        app.UseSignalR(routes =>
-        {
-            routes.MapHub<WebRtcHub>("/webRtcHub");
-        });
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action=Index}/{id?}");
+            });
 
 
-        app.UseMvc(routes =>
-        {
-            routes.MapRoute(
-                name: "default",
-                template: "{controller}/{action=Index}/{id?}");
-        });
-
-
-        app.UseSpa(spa =>
-        {
+            app.UseSpa(spa =>
+            {
             // To learn more about options for serving an Angular SPA from ASP.NET Core,
             // see https://go.microsoft.com/fwlink/?linkid=864501
 
             spa.Options.SourcePath = "ClientApp";
 
-            if (env.IsDevelopment())
-            {
-                spa.UseAngularCliServer(npmScript: "start");
-            }
-        });
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+            });
 
-        userDbContext.Database.EnsureCreated();
+            userDbContext.Database.EnsureCreated();
+        }
     }
 }
 

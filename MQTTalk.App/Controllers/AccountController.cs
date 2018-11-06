@@ -7,28 +7,31 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MQTTalk.App.Dtos;
-using MQTTalk.App.Services;
+
 
 namespace MQTTalk.App.Controllers
 {
-    [Route("[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
+    [ApiController]
     public class AccountController : Controller
     {
         private UserManager<IdentityUser> _userManager;
         private SignInManager<IdentityUser> _signInManager;
-        private IJWTConfiguration _jwtConfiguration;
+
+        private IConfiguration _config;
 
         public AccountController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IJWTConfiguration jwtConfiguration
+            IConfiguration config
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _jwtConfiguration = jwtConfiguration;
+            _config = config;
         }
         [HttpPost]
         public async Task<Object> Login([FromBody] LoginDto model)
@@ -52,7 +55,7 @@ namespace MQTTalk.App.Controllers
                 UserName = model.Email,
                 Email = model.Email,
             };
-            
+
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
@@ -72,18 +75,18 @@ namespace MQTTalk.App.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.GetConfiguration("SecretKey")));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetValue<string>("Server:Jwt:Secret")));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_jwtConfiguration.GetConfiguration("TokenLifeTime")));
+            var expires = DateTime.Now.AddDays(Convert.ToDouble(_config.GetValue<string>("Server:Jwt:TokenLifeTime")));
 
             var token = new JwtSecurityToken(
-                _jwtConfiguration.GetConfiguration("ValidIssuer"),
-                _jwtConfiguration.GetConfiguration("ValidIssuer"),
+                _config.GetValue<string>("Server:Jwt:Issuer"),
+                _config.GetValue<string>("Server:Jwt:Issuer"),
                 claims,
                 expires: expires,
                 signingCredentials: creds
             );
-            
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
