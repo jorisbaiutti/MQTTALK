@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -11,6 +11,7 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { WebrtcComponent } from './webrtc/webrtc.component';
 import { SignalingComponent } from './signaling/signaling.component';
+import { ConfigurationService } from './config/configuration.service';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,15 @@ import { SignalingComponent } from './signaling/signaling.component';
       { path: 'signaling', component: SignalingComponent }
     ])
   ],
-  providers: [],
+  providers: [
+    ConfigurationService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (configService: ConfigurationService) => () => configService.loadConfig(),
+      deps: [ConfigurationService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

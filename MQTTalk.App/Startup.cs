@@ -11,9 +11,9 @@ namespace MQTTalk.App
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration config)
         {
-            Configuration = configuration;
+            Configuration = config;
         }
 
         public IConfiguration Configuration { get; }
@@ -58,7 +58,7 @@ namespace MQTTalk.App
             app.UseCors("CorsPolicy");
             app.UseSignalR(routes =>
             {
-                routes.MapHub<WebRtcHub>("/webRtcHub");
+                routes.MapHub<WebRtcHub>("/hub/webRtcHub");
             });
 
             app.UseMvc(routes =>
