@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { SignalingService } from './signaling.service';
+import { ConfigurationService } from './config/configuration.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,27 +11,27 @@ export class WebrtcService {
   private connection: RTCPeerConnection;
   private calling = false;
 
-  private signal: SignalingService;
-
   public onReceiveRemoteStream: EventEmitter<MediaStream> = new EventEmitter();
 
-  private config: RTCConfiguration = {
-    iceServers: [{
-      urls: ['stun:stunturn.mobilegees.com', 'turn:stunturn.mobilegees.com'],
-      username: 'mqttalk',
-      credential: 'mqttalk'
-    }]
-  };
+  constructor(private signaling: SignalingService, private config: ConfigurationService) {
+  }
 
-  constructor(signaling: SignalingService) {
-    this.signal = signaling;
+  private getRtcConfig(): RTCConfiguration {
+    const targetConfig = this.config.getConfig();
+    return {
+      iceServers: [{
+        urls: [targetConfig.iceStunUrl, targetConfig.iceTurnUrl],
+        username: targetConfig.iceUsername,
+        credential: targetConfig.iceCredential
+      }]
+    };
   }
 
   public acceptCalls(stream: MediaStream) {
-    this.connection = new RTCPeerConnection(this.config);
+    this.connection = new RTCPeerConnection(this.getRtcConfig());
     this.connection.onicecandidate = e => {
       if (e.candidate) {
-        this.signal.sendCandidate(e.candidate);
+        this.signaling.sendCandidate(e.candidate);
       }
     };
 
@@ -42,22 +43,22 @@ export class WebrtcService {
     this.stream = stream;
     this.stream.getTracks().forEach(track => this.connection.addTrack(track, this.stream));
 
-    this.signal.onReceiveOffer.subscribe(offer => {
+    this.signaling.onReceiveOffer.subscribe(offer => {
       this.connection.setRemoteDescription(offer);
       this.connection.createAnswer({
         offerToReceiveAudio: true,
         offerToReceiveVideo: true
       }).then((d) => {
         this.connection.setLocalDescription(d);
-        this.signal.sendAnswer(d);
+        this.signaling.sendAnswer(d);
       });
     });
 
-    this.signal.onReceiveAnswer.subscribe(answer => {
+    this.signaling.onReceiveAnswer.subscribe(answer => {
       this.connection.setRemoteDescription(answer);
     });
 
-    this.signal.onReceiveCandidate.subscribe(candidate => {
+    this.signaling.onReceiveCandidate.subscribe(candidate => {
       this.connection.addIceCandidate(candidate);
     });
   }
@@ -73,7 +74,7 @@ export class WebrtcService {
     }).then((offer) => {
       return this.connection.setLocalDescription(offer);
     }).then(() => {
-      this.signal.sendOffer(this.connection.localDescription);
+      this.signaling.sendOffer(this.connection.localDescription);
       this.calling = true;
     });
   }

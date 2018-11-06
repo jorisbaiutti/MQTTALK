@@ -20,12 +20,14 @@ using System.Text;
 
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
-public class Startup
+namespace MQTTalk.App
 {
-    public Startup(IConfiguration configuration)
+    public class Startup
     {
-        Configuration = configuration;
-    }
+        public Startup(IConfiguration config)
+        {
+            Configuration = config;
+        }
 
     public IConfiguration Configuration { get; }
 
