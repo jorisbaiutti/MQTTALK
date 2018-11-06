@@ -21,8 +21,7 @@ import { ConfigurationService } from './config/configuration.service';
     CounterComponent,
     FetchDataComponent,
     WebrtcComponent,
-    SignalingComponent,
-    LoginComponent
+    SignalingComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
