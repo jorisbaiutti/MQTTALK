@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SignalingService } from '../signaling.service';
+import { SignalingService } from '../communication/signaling.service';
 
 @Component({
   selector: 'app-signaling',

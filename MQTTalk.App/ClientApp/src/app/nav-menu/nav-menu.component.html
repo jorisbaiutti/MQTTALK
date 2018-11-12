@@ -19,16 +19,6 @@
                     </a>
                 </li>
                 <li [routerLinkActive]='["link-active"]'>
-                    <a [routerLink]='["/counter"]' (click)='collapse()'>
-                        <span class='glyphicon glyphicon-education'></span> Counter
-                    </a>
-                </li>
-                <li [routerLinkActive]='["link-active"]'>
-                    <a [routerLink]='["/fetch-data"]' (click)='collapse()'>
-                        <span class='glyphicon glyphicon-th-list'></span> Fetch data
-                    </a>
-                </li>
-                <li [routerLinkActive]='["link-active"]'>
                     <a [routerLink]='["/webrtc"]' (click)='collapse()'>
                         <span class='glyphicon glyphicon-phone'></span> WebRTC
                     </a>
@@ -36,6 +26,11 @@
                 <li [routerLinkActive]='["link-active"]'>
                     <a [routerLink]='["/signaling"]' (click)='collapse()'>
                         <span class='glyphicon glyphicon-signal'></span> Signaling
+                    </a>
+                </li>
+                <li [routerLinkActive]='["link-active"]'>
+                    <a [routerLink]='["/login"]' (click)='collapse()'>
+                        <span class='glyphicon glyphicon-user'></span> Login
                     </a>
                 </li>
             </ul>

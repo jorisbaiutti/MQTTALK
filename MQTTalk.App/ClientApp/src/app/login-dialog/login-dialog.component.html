@@ -1,0 +1,21 @@
+<form [formGroup]="authForm">
+  <fieldset>
+    <legend>Login</legend>
+    <div class="form-field">
+      <label>
+        Email:
+        <input name="email" formControlName="email">
+      </label>
+
+    </div>
+    <div class="form-field">
+      <label>
+        Password:
+        <input name="password" formControlName="password" type="password">
+      </label>
+    </div>
+  </fieldset>
+  <div class="form-buttons">
+    <button class="button button-primary" (click)="login()">Login</button>
+  </div>
+</form>

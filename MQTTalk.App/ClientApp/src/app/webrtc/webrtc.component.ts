@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WebrtcService } from '../webrtc.service';
+import { WebrtcService } from '../communication/webrtc.service';
 
 @Component({
   selector: 'app-webrtc',

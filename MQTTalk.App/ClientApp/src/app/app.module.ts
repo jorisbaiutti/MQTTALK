@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
@@ -12,6 +12,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { WebrtcComponent } from './webrtc/webrtc.component';
 import { SignalingComponent } from './signaling/signaling.component';
 import { ConfigurationService } from './config/configuration.service';
+import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,14 +22,16 @@ import { ConfigurationService } from './config/configuration.service';
     CounterComponent,
     FetchDataComponent,
     WebrtcComponent,
-    SignalingComponent
+    SignalingComponent,
+    LoginDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
-    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'login', component: LoginDialogComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'webrtc', component: WebrtcComponent },
