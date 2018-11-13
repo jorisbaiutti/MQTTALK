@@ -35,14 +35,14 @@ namespace MQTTalk.App.Controllers
         }
 
         [HttpPost]
-        public async Task<Object> Login([FromBody] LoginDto model)
+        public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
 
             if (result.Succeeded)
             {
                 var appUser = _userManager.Users.SingleOrDefault(u => u.Email == model.Email);
-                var token = await GenerateJwtToken(model.Email, appUser);
+                var token =  GenerateJwtToken(model.Email, appUser);
                 var tokenResult = new JObject();
                 tokenResult.Add("token", token);
                 tokenResult.Add("expiresIn", DateTime.Now.AddDays(Convert.ToDouble(_config.GetValue<string>("Server:Jwt:TokenLifeTime"))));
@@ -55,7 +55,7 @@ namespace MQTTalk.App.Controllers
 
         }
         [HttpPost]
-        public async Task<Object> Register([FromBody] RegisterDto model)
+        public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
             var user = new IdentityUser
             {
@@ -68,7 +68,7 @@ namespace MQTTalk.App.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                var token = await GenerateJwtToken(model.Email, user);
+                var token =  GenerateJwtToken(model.Email, user);
                 var tokenResult = new JObject();
                 tokenResult.Add("token", token);
                 tokenResult.Add("expiresIn", DateTime.Now.AddDays(Convert.ToDouble(_config.GetValue<string>("Server:Jwt:TokenLifeTime"))));
@@ -77,7 +77,7 @@ namespace MQTTalk.App.Controllers
 
             throw new ApplicationException("UNKNOWN_ERROR");
         }
-        private async Task<string> GenerateJwtToken(string email, IdentityUser user)
+        private string GenerateJwtToken(string email, IdentityUser user)
         {
             var claims = new List<Claim>
             {
