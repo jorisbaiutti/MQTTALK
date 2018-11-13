@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MQTTalk.App.Controllers
 {
-    [Route("[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
     public class TestController : Controller
     {
         private UserManager<IdentityUser> _userManager;
@@ -16,9 +16,11 @@ namespace MQTTalk.App.Controllers
         {
             _userManager = userManager;
         }
+
         [HttpGet]
         [Authorize]
-        public IActionResult someData(){
+        public IActionResult someData()
+        {
             var model = _userManager.Users.FirstOrDefault(user => user.Email == "joris.baiutti@gmail.com");
             return Ok(model);
         }

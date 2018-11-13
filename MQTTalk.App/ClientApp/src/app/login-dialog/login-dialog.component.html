@@ -1,21 +1,21 @@
-<form [formGroup]="authForm">
-  <fieldset>
-    <legend>Login</legend>
-    <div class="form-field">
-      <label>
-        Email:
-        <input name="email" formControlName="email">
-      </label>
+<div class="form-field">
+  <label>
+    Email:
+    <input type="text" [formControl]="email" [disabled]="authService.isLoggedOut()">
+  </label>
 
-    </div>
-    <div class="form-field">
-      <label>
-        Password:
-        <input name="password" formControlName="password" type="password">
-      </label>
-    </div>
-  </fieldset>
-  <div class="form-buttons">
-    <button class="button button-primary" (click)="login()">Login</button>
-  </div>
-</form>
+</div>
+<div class="form-field">
+  <label>
+    Password:
+    <input name="password" [formControl]="password" type="password" [disabled]="authService.isLoggedOut()">
+  </label>
+</div>
+<div class="
+      form-buttons">
+  <button class="button button-primary" (click)="login()" [disabled]="authService.isLoggedIn()">Login</button>
+  <button class="
+    button button-secondary" (click)="register()" [disabled]="authService.isLoggedIn()">Register</button>
+  <button class="button" (click)="logout()" [disabled]="authService.isLoggedOut()">Logout</button>
+  <button class="button" (click)="testAuth()">Test auth</button>
+</div>
