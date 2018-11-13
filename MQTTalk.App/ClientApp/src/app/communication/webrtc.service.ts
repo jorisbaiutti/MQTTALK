@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { SignalingService } from './signaling.service';
-import { ConfigurationService } from './config/configuration.service';
+import { ConfigurationService } from '../config/configuration.service';
 
 @Injectable({
   providedIn: 'root'

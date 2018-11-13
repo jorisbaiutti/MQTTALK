@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MQTTalk.App.Dtos;
-
+using Newtonsoft.Json.Linq;
 
 namespace MQTTalk.App.Controllers
 {
@@ -33,6 +33,7 @@ namespace MQTTalk.App.Controllers
             _signInManager = signInManager;
             _config = config;
         }
+
         [HttpPost]
         public async Task<Object> Login([FromBody] LoginDto model)
         {
@@ -41,10 +42,16 @@ namespace MQTTalk.App.Controllers
             if (result.Succeeded)
             {
                 var appUser = _userManager.Users.SingleOrDefault(u => u.Email == model.Email);
-                return await GenerateJwtToken(model.Email, appUser);
+                var token = await GenerateJwtToken(model.Email, appUser);
+                var tokenResult = new JObject();
+                tokenResult.Add("token", token);
+                tokenResult.Add("expiresIn", DateTime.Now.AddDays(Convert.ToDouble(_config.GetValue<string>("Server:Jwt:TokenLifeTime"))));
+                return Ok(tokenResult);
             }
 
-            throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
+            return Unauthorized();
+
+            // throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
 
         }
         [HttpPost]
@@ -61,12 +68,16 @@ namespace MQTTalk.App.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return await GenerateJwtToken(model.Email, user);
+                var token = await GenerateJwtToken(model.Email, user);
+                var tokenResult = new JObject();
+                tokenResult.Add("token", token);
+                tokenResult.Add("expiresIn", DateTime.Now.AddDays(Convert.ToDouble(_config.GetValue<string>("Server:Jwt:TokenLifeTime"))));
+                return Ok(tokenResult);
             }
 
             throw new ApplicationException("UNKNOWN_ERROR");
         }
-        private async Task<object> GenerateJwtToken(string email, IdentityUser user)
+        private async Task<string> GenerateJwtToken(string email, IdentityUser user)
         {
             var claims = new List<Claim>
             {

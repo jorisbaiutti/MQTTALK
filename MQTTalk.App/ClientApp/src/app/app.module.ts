@@ -1,41 +1,42 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { WebrtcComponent } from './webrtc/webrtc.component';
-import { SignalingComponent } from './signaling/signaling.component';
 import { ConfigurationService } from './config/configuration.service';
+import { LoginDialogComponent } from './login-dialog/login-dialog.component';
+import { AuthGuardService } from './auth/auth-guard.service';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     WebrtcComponent,
-    SignalingComponent
+    LoginDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
-    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'webrtc', component: WebrtcComponent },
-      { path: 'signaling', component: SignalingComponent }
+      { path: 'login', component: LoginDialogComponent },
+      { path: 'webrtc', component: WebrtcComponent, canActivate: [AuthGuardService] }
     ])
   ],
   providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    },
     ConfigurationService,
     {
       provide: APP_INITIALIZER,
