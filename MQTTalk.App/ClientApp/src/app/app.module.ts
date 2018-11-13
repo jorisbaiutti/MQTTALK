@@ -12,6 +12,8 @@ import { ConfigurationService } from './config/configuration.service';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { ChatComponent } from './chat/chat.component';
+import { MessageComponent } from './chat/message/message.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
     NavMenuComponent,
     HomeComponent,
     WebrtcComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    ChatComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
