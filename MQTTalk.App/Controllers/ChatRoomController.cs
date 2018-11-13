@@ -5,7 +5,7 @@ using MQTTalk.App.Dtos;
 
 namespace MQTTalk.App.Controllers
 {
-    [Route("api/controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ChatRoomController : ControllerBase
     {
