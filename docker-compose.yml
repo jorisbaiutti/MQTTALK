@@ -1,0 +1,26 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ./Server
+      dockerfile: Dockerfile
+    image: mqttalk/backend:latest
+    environment:
+     - MQTTALK_Client__IceStunUrl=stun:stunturn.mobilegees.com
+     - MQTTALK_Client__IceTurnUrl=turn:stunturn.mobilegees.com
+     - MQTTALK_Client__IceUsername=mqttalk
+     - MQTTALK_Client__IceCredential=mqttalk
+     - MQTTALK_Jwt__Issuer=http://localhost/
+     - MQTTALK_Jwt__Secret=fc1d4f60-f18b-4bfc-829b-103e7d2f692c
+     - MQTTALK_Jwt__TokenLifeTime=30
+     - MQTTALK_Database__Identity=Server=(localdb)\\MSSQLLocalDB;Database=UserDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+     - MQTTALK_Database__Chat=Server=(localdb)\\MSSQLLocalDB;Database=ChatDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+    ports: 
+     - "8080:80"
+  client:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    image: mqttalk/client:latest
+    ports:
+      - 3000:80
