@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
 namespace MQTTalk.App.Signaling
 {
+    [Authorize]
     public class WebRtcHub : Hub
     {
         public async Task SendOffer(string offer)
