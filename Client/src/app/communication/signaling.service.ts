@@ -1,6 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +16,7 @@ export class SignalingService {
   constructor() {
     const idToken = localStorage.getItem('id_token');
     this.connection = new HubConnectionBuilder()
-      .withUrl('/hub/webRtcHub', {
+      .withUrl(`${environment.apiUrl}/hub/webRtcHub`, {
         accessTokenFactory: () => idToken
       })
       .configureLogging(LogLevel.Information)

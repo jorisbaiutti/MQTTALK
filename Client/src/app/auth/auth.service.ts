@@ -4,6 +4,8 @@ import { shareReplay, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   public login(email: string, password: string): Observable<object> {
-    return this.http.post('/api/account/login', { email, password })
+    return this.http.post(`${environment.apiUrl}/api/account/login`, { email, password })
       .pipe(
         tap(res => this.setSession(res)),
         shareReplay(1)
@@ -20,7 +22,7 @@ export class AuthService {
   }
 
   public register(email: string, password: string): Observable<object> {
-    return this.http.post('/api/account/register', { email, password })
+    return this.http.post(`${environment.apiUrl}/api/account/register`, { email, password })
       .pipe(
         tap(res => this.setSession(res)),
         shareReplay(1)
