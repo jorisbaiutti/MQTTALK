@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MQTTalk.App.Data;
 using MQTTalk.App.Dtos;
 
 namespace MQTTalk.App.Controllers
@@ -9,12 +11,18 @@ namespace MQTTalk.App.Controllers
     [ApiController]
     public class ChatRoomController : ControllerBase
     {
+        public ChatRoomController()
+        {
+            
+        }
         [HttpGet]
         [Authorize]
         public ActionResult<List<ChatRoomDto>> GetChatRooms()
         {
+
             return Ok("");
         }
+  
 
         [HttpGet("{id}")]
         [Authorize]

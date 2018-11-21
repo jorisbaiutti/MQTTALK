@@ -14,6 +14,8 @@ import { AuthGuardService } from './auth/auth-guard.service';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { ChatComponent } from './chat/chat.component';
 import { MessageComponent } from './chat/message/message.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatButtonModule, MatCheckboxModule, MatCardModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -32,8 +34,11 @@ import { MessageComponent } from './chat/message/message.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'login', component: LoginDialogComponent },
-      { path: 'webrtc', component: WebrtcComponent, canActivate: [AuthGuardService] }
-    ])
+      { path: 'webrtc', component: WebrtcComponent, canActivate: [AuthGuardService] },
+      { path: 'chat', component: ChatComponent, }
+    ]),
+    BrowserAnimationsModule,
+    MatCardModule
   ],
   providers: [
     {

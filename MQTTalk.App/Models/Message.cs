@@ -9,5 +9,6 @@ namespace MQTTalk.App.Models
         public DateTime Sent { get; set; }
         public int FromUserId { get; set; }
         public int ToUserId { get; set; }
+        public Chat chat { get; set; }
     }
 }

@@ -19,7 +19,7 @@ export class ConfigurationService {
   }
 
   public loadConfig(): Promise<Config> {
-    return this.http.get<Config>('/api/config')
+    return this.http.get<Config>('http://localhost:53457/api/config')
       .pipe(tap(c => this.config = c), tap(c => console.log('Config loaded', c)))
       .toPromise();
   }

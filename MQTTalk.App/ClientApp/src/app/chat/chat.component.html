@@ -1,3 +1,10 @@
-<p>
-  chat works!
-</p>
+<div class='container-fluid'>
+  <div class='row'>
+    <div class='col-sm-3'>
+
+    </div>
+    <div class='col-sm-9 body-content'>
+        <app-message *ngFor="let message of messages" [message]="message"></app-message>
+    </div>
+  </div>
+</div>

@@ -91,6 +91,8 @@ namespace MQTTalk.App
             {
                 builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200", "https://localhost:4200", "https://mqttalk.mobilegees.com").AllowCredentials();
             }));
+            
+            services.AddTransient<IChatRepository, ChatRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
