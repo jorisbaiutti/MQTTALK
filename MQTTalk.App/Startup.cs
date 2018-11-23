@@ -14,9 +14,7 @@ using MQTTalk.App.Signaling;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-
-
-
+using System.Threading.Tasks;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace MQTTalk.App
@@ -49,7 +47,8 @@ namespace MQTTalk.App
                 options.UseSqlServer(Configuration.GetValue<string>("Server:Database:Identity"));
             });
 
-            services.AddDbContext<ChatDbContext>(options => {
+            services.AddDbContext<ChatDbContext>(options =>
+            {
                 options.UseSqlServer(Configuration.GetValue<string>("Server:Database:Chat"));
             });
 
@@ -82,6 +81,21 @@ namespace MQTTalk.App
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Server:Jwt:Secret"))),
                         ClockSkew = TimeSpan.Zero
                     };
+                    cfg.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                                var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/hub")))
+                            {   
+                                    context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
 
@@ -91,7 +105,7 @@ namespace MQTTalk.App
             {
                 builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200", "https://localhost:4200", "https://mqttalk.mobilegees.com").AllowCredentials();
             }));
-            
+
             services.AddTransient<IChatRepository, ChatRepository>();
         }
 
@@ -116,7 +130,8 @@ namespace MQTTalk.App
             app.UseAuthentication();
             app.UseSignalR(routes =>
             {
-                routes.MapHub<WebRtcHub>("/hub/webRtcHub");
+                routes.MapHub<WebRtcHub>("/hub/webRtcHub"),
+                routes.MapHub<MessageHub>("/hub/messageHub");
             });
 
 
@@ -130,10 +145,10 @@ namespace MQTTalk.App
 
             app.UseSpa(spa =>
             {
-            // To learn more about options for serving an Angular SPA from ASP.NET Core,
-            // see https://go.microsoft.com/fwlink/?linkid=864501
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
 
-            spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
                 {
