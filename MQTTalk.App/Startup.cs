@@ -58,8 +58,7 @@ namespace MQTTalk.App
 
             //JWT Authentication
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            services
-                .AddAuthentication(options =>
+            services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,17 +80,16 @@ namespace MQTTalk.App
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Server:Jwt:Secret"))),
                         ClockSkew = TimeSpan.Zero
                     };
+
                     cfg.Events = new JwtBearerEvents
                     {
                         OnMessageReceived = context =>
                         {
                             var accessToken = context.Request.Query["access_token"];
-
-                                var path = context.HttpContext.Request.Path;
-                            if (!string.IsNullOrEmpty(accessToken) &&
-                                (path.StartsWithSegments("/hub")))
-                            {   
-                                    context.Token = accessToken;
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrWhiteSpace(path) && path.StartsWithSegments("/hub"))
+                            {
+                                context.Token = accessToken;
                             }
                             return Task.CompletedTask;
                         }
@@ -105,8 +103,6 @@ namespace MQTTalk.App
             {
                 builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200", "https://localhost:4200", "https://mqttalk.mobilegees.com").AllowCredentials();
             }));
-
-            services.AddTransient<IChatRepository, ChatRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -130,8 +126,7 @@ namespace MQTTalk.App
             app.UseAuthentication();
             app.UseSignalR(routes =>
             {
-                routes.MapHub<WebRtcHub>("/hub/webRtcHub"),
-                routes.MapHub<MessageHub>("/hub/messageHub");
+                routes.MapHub<WebRtcHub>("/hub/webRtcHub");
             });
 
 

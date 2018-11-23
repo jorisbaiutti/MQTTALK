@@ -12,7 +12,14 @@ export class SignalingService {
   public onReceiveCandidate: EventEmitter<RTCIceCandidate> = new EventEmitter<RTCIceCandidate>();
 
   constructor() {
-    this.connection = new HubConnectionBuilder().withUrl('/hub/webRtcHub').configureLogging(LogLevel.Information).build();
+    const idToken = localStorage.getItem('id_token');
+    this.connection = new HubConnectionBuilder()
+      .withUrl('/hub/webRtcHub', {
+        accessTokenFactory: () => idToken
+      })
+      .configureLogging(LogLevel.Information)
+      .build();
+
     this.connection.start().catch(this.handleError);
 
     this.connection.on('ReceiveOffer', (offer: string) => {
