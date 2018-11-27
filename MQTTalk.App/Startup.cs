@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +42,8 @@ namespace MQTTalk.App
             });
 
             services.AddSignalR();
+
+
 
             services.AddDbContext<UserDbContext>(options =>
             {
@@ -96,7 +99,7 @@ namespace MQTTalk.App
                     };
                 });
 
-
+            services.AddSingleton<IUserIdProvider, CustomUserProvider>();
 
             services.AddCors(options => options.AddPolicy("CorsPolicy",
             builder =>
@@ -127,6 +130,7 @@ namespace MQTTalk.App
             app.UseSignalR(routes =>
             {
                 routes.MapHub<WebRtcHub>("/hub/webRtcHub");
+                routes.MapHub<MessageHub>("/hub/messageHub");
             });
 
 

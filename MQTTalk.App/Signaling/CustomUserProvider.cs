@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 
@@ -6,15 +7,10 @@ namespace MQTTalk.App.Signaling
 {
     public class CustomUserProvider : IUserIdProvider
     {
-        private UserManager<IdentityUser> _userManager;
-
-        public CustomUserProvider(UserManager<IdentityUser> userManager)
+        public virtual string GetUserId(HubConnectionContext connection)
         {
-            _userManager = userManager;
-        }
-        public string GetUserId(HubConnectionContext connection)
-        {
-            var appUser = _userManager.Users.SingleOrDefault(u => u.Email == connection.);
+            var user = connection.User.FindFirst("sub").Value;
+            return user;
         }
     }
 }

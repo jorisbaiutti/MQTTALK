@@ -35,7 +35,7 @@ import {MatButtonModule, MatCheckboxModule, MatCardModule} from '@angular/materi
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'login', component: LoginDialogComponent },
       { path: 'webrtc', component: WebrtcComponent, canActivate: [AuthGuardService] },
-      { path: 'chat', component: ChatComponent, }
+      { path: 'chat', component: ChatComponent, canActivate: [AuthGuardService] },
     ]),
     BrowserAnimationsModule,
     MatCardModule

@@ -12,7 +12,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   public login(email: string, password: string): Observable<object> {
-    return this.http.post('/api/account/login', { email, password })
+    return this.http.post('http://localhost:53457/api/account/login', { email, password })
       .pipe(
         tap(res => this.setSession(res)),
         shareReplay(1)
@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   public register(email: string, password: string): Observable<object> {
-    return this.http.post('/api/account/register', { email, password })
+    return this.http.post('http://localhost:53457/api/account/register', { email, password })
       .pipe(
         tap(res => this.setSession(res)),
         shareReplay(1)
