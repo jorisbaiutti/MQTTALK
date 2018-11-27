@@ -9,7 +9,7 @@ services:
      - "1433"
   backend:
     build:
-      context: ./Server
+      context: .
       dockerfile: Dockerfile
     image: mqttalk/backend:latest
     environment:
@@ -26,10 +26,3 @@ services:
      - "8080:80"
     depends_on:
      - mssql
-  client:
-    build:
-      context: ./Client
-      dockerfile: Dockerfile
-    image: mqttalk/client:latest
-    ports:
-      - 3000:80
