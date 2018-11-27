@@ -25,5 +25,6 @@ namespace MQTTalk.App
                 config.AddEnvironmentVariables("MQTTALK_");
             })
             .UseStartup<Startup>();
+        // .UseUrls("http://localhost:8080/");
     }
 }

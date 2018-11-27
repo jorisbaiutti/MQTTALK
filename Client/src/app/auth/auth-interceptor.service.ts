@@ -13,21 +13,16 @@ export class AuthInterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    // Always add cors origin
-    let cloned = req.clone({
-      headers: req.headers.set('Access-Control-Allow-Origin', environment.accessControlOrigin)
-    });
-
     const idToken = localStorage.getItem('id_token');
 
     if (idToken) {
-      cloned = cloned.clone({
-        headers: cloned.headers.set('Authorization', 'Bearer ' + idToken)
+      const newReq = req.clone({
+        headers: req.headers.set('Authorization', 'Bearer ' + idToken)
       });
 
-      return next.handle(cloned);
+      return next.handle(newReq);
     }
 
-    return next.handle(cloned);
+    return next.handle(req);
   }
 }

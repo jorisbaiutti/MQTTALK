@@ -88,13 +88,7 @@ namespace MQTTalk.App
                     };
                 });
 
-
-
-            services.AddCors(options => options.AddPolicy("CorsPolicy",
-            builder =>
-            {
-                builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200", "https://localhost:4200", "https://mqttalk.mobilegees.com").AllowCredentials();
-            }));
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,10 +103,17 @@ namespace MQTTalk.App
                 app.UseHsts();
             }
 
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+
             app.UseHttpsRedirection();
             app.UseMvc();
 
-            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseSignalR(routes =>
             {
