@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class MessagingService {
   constructor() {
     const idToken = localStorage.getItem('id_token');
     this.connection = new HubConnectionBuilder()
-      .withUrl('http://localhost:53457/hub/messageHub', {
+      .withUrl(`${environment.apiUrl}/hub/messageHub`, {
         accessTokenFactory: () => idToken
       })
       .configureLogging(LogLevel.Information)
