@@ -88,7 +88,7 @@ namespace MQTTalk.App.Controllers
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetValue<string>("Server:Jwt:Secret")));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_config.GetValue<string>("Server:Jwt:TokenLifeTime")));
+            var expires = DateTime.Now.AddMinutes(Convert.ToDouble(_config.GetValue<string>("Server:Jwt:TokenLifeTime")));
 
             var token = new JwtSecurityToken(
                 _config.GetValue<string>("Server:Jwt:Issuer"),

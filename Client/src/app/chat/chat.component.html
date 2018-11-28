@@ -1,3 +1,20 @@
-<p>
-  chat works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-9 body-content">
+      <app-message
+        *ngFor="let message of messages"
+        [message]="message"
+      ></app-message>
+    </div>
+  </div>
+</div>
+<div class="form-field">
+  <label> message: <input type="text" [formControl]="message" /> </label>
+</div>
+<div class="form-field">
+  <label> receipent: <input type="text" [formControl]="receipent" /> </label>
+</div>
+<div class="form-buttons">
+  <button class="button button-primary" (click)="send()">send</button>
+</div>

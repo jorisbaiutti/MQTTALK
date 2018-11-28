@@ -6,5 +6,6 @@ namespace MQTTalk.App.Models
     {
         [Key]
         public int UserId { get; set; }
+        public string EMail { get; set; }
     }
 }

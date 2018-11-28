@@ -2,7 +2,7 @@ POST http://localhost:53457/api/Account/Register HTTP/1.1
 Content-Type: application/json
 
 {
-	"Email": "joris.baiaqwersdfutti@gmail.com",
+	"Email": "asfdasdf@gmail.com",
 	"Password": "SomeSecurePassword123!"
 }
 
