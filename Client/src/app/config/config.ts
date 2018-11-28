@@ -3,4 +3,5 @@ export interface Config {
     iceTurnUrl: string;
     iceCredential: string;
     iceUsername: string;
+    apiUrl: string;
 }

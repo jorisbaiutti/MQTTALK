@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
 
 import { environment } from '../../environments/environment';
+import { ConfigurationService } from '../config/configuration.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,13 @@ export class SignalingService {
   public onReceiveAnswer: EventEmitter<RTCSessionDescriptionInit> = new EventEmitter<RTCSessionDescriptionInit>();
   public onReceiveCandidate: EventEmitter<RTCIceCandidate> = new EventEmitter<RTCIceCandidate>();
 
-  constructor() {
+  constructor(configService: ConfigurationService) {
+
+    const backendUrl = configService.getConfig().apiUrl;
+
     const idToken = localStorage.getItem('id_token');
     this.connection = new HubConnectionBuilder()
-      .withUrl(`${environment.apiUrl}/hub/webRtcHub`, {
+      .withUrl(`${backendUrl}/hub/webRtcHub`, {
         accessTokenFactory: () => idToken
       })
       .configureLogging(LogLevel.Information)

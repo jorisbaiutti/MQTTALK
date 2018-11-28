@@ -3,18 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { shareReplay, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
-
-import { environment } from '../../environments/environment';
+import { ConfigurationService } from '../config/configuration.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  private backendUrl: string;
+
+  constructor(private http: HttpClient, configService: ConfigurationService) {
+    this.backendUrl = configService.getConfig().apiUrl;
+  }
 
   public login(email: string, password: string): Observable<object> {
-    return this.http.post(`${environment.apiUrl}/api/account/login`, { email, password })
+    return this.http.post(`${this.backendUrl}/api/account/login`, { email, password })
       .pipe(
         tap(res => this.setSession(res)),
         shareReplay(1)
@@ -22,7 +25,7 @@ export class AuthService {
   }
 
   public register(email: string, password: string): Observable<object> {
-    return this.http.post(`${environment.apiUrl}/api/account/register`, { email, password })
+    return this.http.post(`${this.backendUrl}/api/account/register`, { email, password })
       .pipe(
         tap(res => this.setSession(res)),
         shareReplay(1)

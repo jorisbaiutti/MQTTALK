@@ -1,0 +1,7 @@
+{
+    "iceStunUrl": "stun:stunturn.mobilegees.com",
+    "iceTurnUrl": "turn:stunturn.mobilegees.com",
+    "iceUsername": "mqttalk",
+    "iceCredential": "mqttalk",
+    "apiUrl": "http://localhost:8080"
+}
